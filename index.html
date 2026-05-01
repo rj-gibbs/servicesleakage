@@ -1,4 +1,4 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
 <title>Resource Optimization Impact Calculator</title>
@@ -8,6 +8,9 @@ body {
   font-family: Arial;
   margin: 40px;
   background: #f7f7f7;
+}
+h2 {
+  margin-top: 40px;
 }
 .section {
   background: white;
@@ -31,191 +34,152 @@ input {
 
 <body>
 
+<h1>💰 Resource Management Impact Calculator</h1>
+<p>Directionally accurate estimates to uncover hidden revenue & margin leakage.</p>
+
+<!-- 1. Utilization Leakage -->
+<div class="section">
+  <h2>1. Utilization Leakage</h2>
+
+  Headcount: <input id="u_headcount" type="number"><br>
+  Billable Rate ($/hr): <input id="u_rate" type="number"><br>
+  Target Utilization (%): <input id="u_target" type="number"><br>
+  Actual Utilization (%): <input id="u_actual" type="number"><br>
+
+  <button onclick="calcUtilization()">Calculate</button>
+
+  <div class="result" id="u_result"></div>
+</div>
+
+<!-- 2. Scheduling Inefficiency -->
+<div class="section">
+  <h2>2. Scheduling/Admin Time Loss</h2>
+
+  Hours/week per manager: <input id="s_hours" type="number"><br>
+  Number of managers: <input id="s_managers" type="number"><br>
+  Billable Rate ($/hr): <input id="s_rate" type="number"><br>
+
+  <button onclick="calcScheduling()">Calculate</button>
+
+  <div class="result" id="s_result"></div>
+</div>
+
+<!-- 3. Staffing Inefficiency -->
+<div class="section">
+  <h2>3. Over/Under Staffing Impact</h2>
+
+  % of projects misallocated: <input id="o_percent" type="number"><br>
+  Avg Project Value ($): <input id="o_value" type="number"><br>
+  Total Projects/year: <input id="o_projects" type="number"><br>
+  Margin (%): <input id="o_margin" type="number"><br>
+
+  <button onclick="calcStaffing()">Calculate</button>
+
+  <div class="result" id="o_result"></div>
+</div>
+
+<!-- 4. Project Delays -->
+<div class="section">
+  <h2>4. Project Delays</h2>
+
+  Avg delay (weeks): <input id="d_delay" type="number"><br>
+  Avg project value ($): <input id="d_value" type="number"><br>
+  Projects/year: <input id="d_projects" type="number"><br>
+
+  <button onclick="calcDelay()">Calculate</button>
+
+  <div class="result" id="d_result"></div>
+</div>
+
+<!-- TOTAL -->
+<div class="section">
+  <h2>🔥 Total Estimated Impact</h2>
+  <button onclick="calcTotal()">Calculate Total</button>
+  <div class="result" id="total_result"></div>
+</div>
+
 <script>
+// PASSWORD GATE (runs after page loads cleanly)
 let password = prompt("Enter access password:");
 
 if (password !== "analyzer1") {
-  document.body.innerHTML = "Access Denied";
+  document.body.innerHTML = "<h1>Access Denied</h1>";
+}
+
+let totals = {
+  utilization: 0,
+  scheduling: 0,
+  staffing: 0,
+  delay: 0
+};
+
+function calcUtilization() {
+  let headcount = +document.getElementById("u_headcount").value;
+  let rate = +document.getElementById("u_rate").value;
+  let target = +document.getElementById("u_target").value / 100;
+  let actual = +document.getElementById("u_actual").value / 100;
+
+  let hours = 2080;
+  let loss = headcount * hours * (target - actual) * rate;
+
+  totals.utilization = loss;
+
+  document.getElementById("u_result").innerText =
+    "Estimated Lost Revenue: $" + loss.toLocaleString();
+}
+
+function calcScheduling() {
+  let hours = +document.getElementById("s_hours").value;
+  let managers = +document.getElementById("s_managers").value;
+  let rate = +document.getElementById("s_rate").value;
+
+  let weeks = 48;
+  let loss = hours * weeks * managers * rate;
+
+  totals.scheduling = loss;
+
+  document.getElementById("s_result").innerText =
+    "Estimated Lost Revenue: $" + loss.toLocaleString();
+}
+
+function calcStaffing() {
+  let percent = +document.getElementById("o_percent").value / 100;
+  let value = +document.getElementById("o_value").value;
+  let projects = +document.getElementById("o_projects").value;
+  let margin = +document.getElementById("o_margin").value / 100;
+
+  let loss = percent * value * projects * margin;
+
+  totals.staffing = loss;
+
+  document.getElementById("o_result").innerText =
+    "Estimated Margin Loss: $" + loss.toLocaleString();
+}
+
+function calcDelay() {
+  let delay = +document.getElementById("d_delay").value;
+  let value = +document.getElementById("d_value").value;
+  let projects = +document.getElementById("d_projects").value;
+
+  let loss = delay * value * projects * 0.02;
+
+  totals.delay = loss;
+
+  document.getElementById("d_result").innerText =
+    "Estimated Delay Impact: $" + loss.toLocaleString();
+}
+
+function calcTotal() {
+  let total =
+    totals.utilization +
+    totals.scheduling +
+    totals.staffing +
+    totals.delay;
+
+  document.getElementById("total_result").innerText =
+    "Total Estimated Impact: $" + total.toLocaleString();
 }
 </script>
-<p class="p2"><br></p>
-<p class="p1">&lt;!DOCTYPE html&gt;</p>
-<p class="p1">&lt;html&gt;</p>
-<p class="p1">&lt;head&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;title&gt;Resource Optimization Impact Calculator&lt;/title&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;style&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>body {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-family: Arial;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin: 40px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: #f7f7f7;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>h2 {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin-top: 40px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.section {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: white;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin-bottom: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 8px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>input {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin: 5px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 5px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>width: 120px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.result {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-weight: bold;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: darkred;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin-top: 10px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/style&gt;</p>
-<p class="p1">&lt;/head&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;body&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;h1&gt;💰 Resource Management Impact Calculator&lt;/h1&gt;</p>
-<p class="p1">&lt;p&gt;Directionally accurate estimates to uncover hidden revenue &amp; margin leakage.&lt;/p&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;!-- 1. Utilization Leakage --&gt;</p>
-<p class="p1">&lt;div class="section"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;h2&gt;1. Utilization Leakage&lt;/h2&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>Headcount: &lt;input id="u_headcount" type="number"&gt;&lt;br&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>Billable Rate ($/hr): &lt;input id="u_rate" type="number"&gt;&lt;br&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>Target Utilization (%): &lt;input id="u_target" type="number"&gt;&lt;br&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>Actual Utilization (%): &lt;input id="u_actual" type="number"&gt;&lt;br&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;button onclick="calcUtilization()"&gt;Calculate&lt;/button&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="result" id="u_result"&gt;&lt;/div&gt;</p>
-<p class="p1">&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;!-- 2. Scheduling Inefficiency --&gt;</p>
-<p class="p1">&lt;div class="section"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;h2&gt;2. Scheduling/Admin Time Loss&lt;/h2&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>Hours/week per manager: &lt;input id="s_hours" type="number"&gt;&lt;br&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>Number of managers: &lt;input id="s_managers" type="number"&gt;&lt;br&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>Billable Rate ($/hr): &lt;input id="s_rate" type="number"&gt;&lt;br&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;button onclick="calcScheduling()"&gt;Calculate&lt;/button&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="result" id="s_result"&gt;&lt;/div&gt;</p>
-<p class="p1">&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;!-- 3. Staffing Inefficiency --&gt;</p>
-<p class="p1">&lt;div class="section"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;h2&gt;3. Over/Under Staffing Impact&lt;/h2&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>% of projects misallocated: &lt;input id="o_percent" type="number"&gt;&lt;br&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>Avg Project Value ($): &lt;input id="o_value" type="number"&gt;&lt;br&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>Total Projects/year: &lt;input id="o_projects" type="number"&gt;&lt;br&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>Margin (%): &lt;input id="o_margin" type="number"&gt;&lt;br&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;button onclick="calcStaffing()"&gt;Calculate&lt;/button&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="result" id="o_result"&gt;&lt;/div&gt;</p>
-<p class="p1">&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;!-- 4. Project Delays --&gt;</p>
-<p class="p1">&lt;div class="section"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;h2&gt;4. Project Delays&lt;/h2&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>Avg delay (weeks): &lt;input id="d_delay" type="number"&gt;&lt;br&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>Avg project value ($): &lt;input id="d_value" type="number"&gt;&lt;br&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>Projects/year: &lt;input id="d_projects" type="number"&gt;&lt;br&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;button onclick="calcDelay()"&gt;Calculate&lt;/button&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="result" id="d_result"&gt;&lt;/div&gt;</p>
-<p class="p1">&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;!-- TOTAL --&gt;</p>
-<p class="p1">&lt;div class="section"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;h2&gt;🔥 Total Estimated Impact&lt;/h2&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;button onclick="calcTotal()"&gt;Calculate Total&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="result" id="total_result"&gt;&lt;/div&gt;</p>
-<p class="p1">&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;script&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">let totals = {</p>
-<p class="p1"><span class="Apple-converted-space">  </span>utilization: 0,</p>
-<p class="p1"><span class="Apple-converted-space">  </span>scheduling: 0,</p>
-<p class="p1"><span class="Apple-converted-space">  </span>staffing: 0,</p>
-<p class="p1"><span class="Apple-converted-space">  </span>delay: 0</p>
-<p class="p1">};</p>
-<p class="p2"><br></p>
-<p class="p1">function calcUtilization() {</p>
-<p class="p1"><span class="Apple-converted-space">  </span>let headcount = +document.getElementById("u_headcount").value;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>let rate = +document.getElementById("u_rate").value;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>let target = +document.getElementById("u_target").value / 100;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>let actual = +document.getElementById("u_actual").value / 100;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>let hours = 2080;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>let loss = headcount * hours * (target - actual) * rate;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>totals.utilization = loss;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById("u_result").innerText =</p>
-<p class="p1"><span class="Apple-converted-space">    </span>"Estimated Lost Revenue: $" + loss.toLocaleString();</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">function calcScheduling() {</p>
-<p class="p1"><span class="Apple-converted-space">  </span>let hours = +document.getElementById("s_hours").value;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>let managers = +document.getElementById("s_managers").value;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>let rate = +document.getElementById("s_rate").value;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>let weeks = 48;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>let loss = hours * weeks * managers * rate;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>totals.scheduling = loss;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById("s_result").innerText =</p>
-<p class="p1"><span class="Apple-converted-space">    </span>"Estimated Lost Revenue: $" + loss.toLocaleString();</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">function calcStaffing() {</p>
-<p class="p1"><span class="Apple-converted-space">  </span>let percent = +document.getElementById("o_percent").value / 100;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>let value = +document.getElementById("o_value").value;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>let projects = +document.getElementById("o_projects").value;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>let margin = +document.getElementById("o_margin").value / 100;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>let loss = percent * value * projects * margin;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>totals.staffing = loss;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById("o_result").innerText =</p>
-<p class="p1"><span class="Apple-converted-space">    </span>"Estimated Margin Loss: $" + loss.toLocaleString();</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">function calcDelay() {</p>
-<p class="p1"><span class="Apple-converted-space">  </span>let delay = +document.getElementById("d_delay").value;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>let value = +document.getElementById("d_value").value;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>let projects = +document.getElementById("d_projects").value;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>let loss = delay * value * projects * 0.02;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>totals.delay = loss;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById("d_result").innerText =</p>
-<p class="p1"><span class="Apple-converted-space">    </span>"Estimated Delay Impact: $" + loss.toLocaleString();</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">function calcTotal() {</p>
-<p class="p1"><span class="Apple-converted-space">  </span>let total =</p>
-<p class="p1"><span class="Apple-converted-space">    </span>totals.utilization +</p>
-<p class="p1"><span class="Apple-converted-space">    </span>totals.scheduling +</p>
-<p class="p1"><span class="Apple-converted-space">    </span>totals.staffing +</p>
-<p class="p1"><span class="Apple-converted-space">    </span>totals.delay;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById("total_result").innerText =</p>
-<p class="p1"><span class="Apple-converted-space">    </span>"Total Estimated Impact: $" + total.toLocaleString();</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;/script&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;/body&gt;</p>
-<p class="p1">&lt;/html&gt;</p>
+
 </body>
 </html>
